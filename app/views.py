@@ -76,32 +76,66 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
 
 def query_builder(request):
     form = CompanyFilterForm()
-    return render(request, 'query_builder.html')
+    return render(request, 'query_builder.html',{'form': form})
 
 
 class CompanyApiView(APIView):
 
     def get(self, request, *args, **kwargs):
         qs = Company.objects.all()
-
         keyword_industry = self.request.query_params.get('industry', None)
 
         if keyword_industry:
-            qs = qs.filter(industry=keyword_industry)
+            qs = qs.filter(industry__icontains=keyword_industry)
 
-        keyword_city = self.request.query_params.get('city', None)
+        keyword_name = self.request.query_params.get('name', None)
 
-        if keyword_city:
-            qs = qs.filter(city=keyword_city)
+        if keyword_name:
+            qs = qs.filter(name__icontains=keyword_name)
 
         keyword_country = self.request.query_params.get('country', None)
 
         if keyword_country:
-            qs = qs.filter(country=keyword_country)
+            qs = qs.filter(country__icontains=keyword_country)
 
-        serializer = CompanySerializer(qs, many=True)
+        keyword_domain = self.request.query_params.get('domain', None)
 
-        return Response(serializer.data)
+        if keyword_domain:
+            qs = qs.filter(domain__icontains=keyword_domain)
+
+        keyword_year_founded = self.request.query_params.get('year_founded', None)
+
+        if keyword_year_founded:
+            qs = qs.filter(year_founded__icontains=keyword_year_founded)
+
+        keyword_size_range = self.request.query_params.get('size_range', None)
+
+        if keyword_size_range:
+            qs = qs.filter(size_range__icontains=keyword_size_range)
+
+        keyword_locality = self.request.query_params.get('locality', None)
+
+        if keyword_locality:
+            qs = qs.filter(locality__icontains=keyword_locality)
+
+        keyword_linkedin_url = self.request.query_params.get('linkedin_url', None)
+
+        if keyword_linkedin_url:
+            qs = qs.filter(linkedin_url__icontains=keyword_linkedin_url)
+
+        keyword_current_employee_estimate = self.request.query_params.get('current_employee_estimate', None)
+
+        if keyword_current_employee_estimate:
+            qs = qs.filter(current_employee_estimate__icontains=keyword_current_employee_estimate)
+
+        keyword_total_employee_estimate = self.request.query_params.get('total_employee_estimate', None)
+
+        if keyword_total_employee_estimate:
+            qs = qs.filter(total_employee_estimate__icontains=keyword_total_employee_estimate)
+
+        count = qs.count()
+
+        return Response({'count': count}, status.HTTP_200_OK)
 
 class Login(LoginView):
     model = User

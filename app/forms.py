@@ -25,6 +25,15 @@ class AddUser(UserCreationForm):
 class CompanyFilterForm(forms.Form):
     name = forms.CharField(max_length=255, required=False)
     domain = forms.CharField(max_length=255, required=False)
-    location = forms.CharField(max_length=255, required=False)
+    year_founded = forms.CharField(max_length=255, required=False)
     industry = forms.CharField(max_length=255, required=False)
-    year_founded = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    size_range = forms.CharField(max_length=255, required=False)
+    locality = forms.CharField(max_length=255, required=False)
+    country = forms.CharField(max_length=255,required=False)
+    linkedin_url = forms.CharField(max_length=255, required=False)
+    current_employee_estimate = forms.CharField(max_length=255, required=False)
+    total_employee_estimate = forms.CharField(max_length=255, required=False)
+
+    class Meta:
+        model = Company
+        fields = '__all__'
