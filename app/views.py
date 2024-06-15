@@ -84,7 +84,21 @@ def auto_complete(request):
 
 
 def query_builder(request):
-    form = CompanyFilterForm()
+    if request.method == "POST":
+        form = CompanyFilterForm(request.POST)
+        if form.is_valid():
+            # Prepare query parameters
+            params = {key: value for key, value in form.cleaned_data.items() if value}
+
+            # Make the API request
+            response = requests.get('http://localhost/get_count/', params=params)
+            if response.status_code == 200:
+                count = response.json().get('count', 0)
+                return JsonResponse({'count': count})
+            else:
+                return JsonResponse({'error': 'Failed to fetch count from API'}, status=response.status_code)
+    else:
+        form = CompanyFilterForm()
     return render(request, 'query_builder.html', {'form': form})
 
 
