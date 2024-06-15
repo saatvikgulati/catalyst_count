@@ -11,11 +11,10 @@ from django.contrib import messages
 from .models import UploadedFile, Company
 import csv
 from rest_framework import status
-from .filters import CompanyFilters
-from rest_framework.response import Response
 from .serializers import CompanySerializer
-from rest_framework.decorators import api_view
-from .forms import UploadForm, AddUser, CompanyForm
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .forms import UploadForm, AddUser, CompanyFilterForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -76,29 +75,33 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
 
 
 def query_builder(request):
-    form = CompanyForm()
+    form = CompanyFilterForm()
     return render(request, 'query_builder.html')
 
 
-@api_view(['GET'])
-def get_count(request):
-    try:
-        # Get query parameters
-        filters = request.query_params
+class CompanyApiView(APIView):
 
-        # Apply filters dynamically
-        filtered_companies = Company.objects.all()
-        for key, value in filters.items():
-            # Apply the filter if the field exists in the model
-            if key in [field.name for field in Company._meta.fields]:
-                filtered_companies = filtered_companies.filter(**{key: value})
+    def get(self, request, *args, **kwargs):
+        qs = Company.objects.all()
 
-        count = filtered_companies.count()
-        serializer = CompanySerializer({'count': count})
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        keyword_industry = self.request.query_params.get('industry', None)
 
+        if keyword_industry:
+            qs = qs.filter(industry=keyword_industry)
+
+        keyword_city = self.request.query_params.get('city', None)
+
+        if keyword_city:
+            qs = qs.filter(city=keyword_city)
+
+        keyword_country = self.request.query_params.get('country', None)
+
+        if keyword_country:
+            qs = qs.filter(country=keyword_country)
+
+        serializer = CompanySerializer(qs, many=True)
+
+        return Response(serializer.data)
 
 class Login(LoginView):
     model = User
