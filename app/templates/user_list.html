@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% block content %}
+<h1>List of Active Users in 30 days</h1>
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <!-- Other user fields you want to display -->
+      <th scope="col">Active</th>
+      <th scope="col"><a role="button" class="btn btn-primary float-right" href="{%url 'account_signup'%}">Add User</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in active_users %}
+    <tr>
+      <td scope="row">{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <!-- Display other user fields -->
+      <td>{%if user.is_active%}Active{%endif%}</td>  <!-- Display "True" or "False" for active status -->
+        <td>  <a href="{% url 'delete_user' user.id %}">  <button class="btn btn-danger btn-sm">Delete</button>
+        </a>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content%}
