@@ -76,7 +76,7 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
 
 def query_builder(request):
     form = CompanyFilterForm()
-    return render(request, 'query_builder.html',{'form': form})
+    return render(request, 'query_builder.html', {'form': form})
 
 
 class CompanyApiView(APIView):
@@ -136,6 +136,7 @@ class CompanyApiView(APIView):
         count = qs.count()
 
         return Response({'count': count}, status.HTTP_200_OK)
+
 
 class Login(LoginView):
     model = User
