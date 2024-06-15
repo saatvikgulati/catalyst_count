@@ -74,6 +74,15 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
             Company.objects.bulk_create(companies)
 
 
+def auto_complete(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(name__icontains=request.GET.get('term'))
+        names = []
+        for company in qs:
+            names.append(company.name)
+        return Response(names, status.HTTP_200_OK)
+
+
 def query_builder(request):
     form = CompanyFilterForm()
     return render(request, 'query_builder.html', {'form': form})

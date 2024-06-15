@@ -10,6 +10,7 @@ urlpatterns = [
     path('accounts/login/', Login.as_view(), name='account_login'),
     path('upload_file/', upload_file, name='upload_file'),
     path('query_builder/', query_builder, name='query_builder'),
+    path('autocomplete/', auto_complete, name='auto_complete'),
     path('get_count/', CompanyApiView.as_view(), name='get_count'),
     path('', lambda request: redirect('accounts/login/')),
 ]
