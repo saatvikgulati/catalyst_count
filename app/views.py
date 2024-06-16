@@ -78,7 +78,7 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
 
 def auto_complete_name(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(name__icontains=request.GET.get('term')).values('name').distinct()[:20]
+        qs = Company.objects.filter(name__icontains=request.GET.get('term')).values('name').distinct()[:15]
         names = []
         for name in qs:
             names.append(name['name'])
@@ -87,7 +87,7 @@ def auto_complete_name(request):
 
 def auto_complete_domain(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(domain__icontains=request.GET.get('term')).values('domain').distinct()[:20]
+        qs = Company.objects.filter(domain__icontains=request.GET.get('term')).values('domain').distinct()[:15]
         domains = []
         for domain in qs:
             domains.append(domain['domain'])
@@ -96,7 +96,7 @@ def auto_complete_domain(request):
 
 def auto_complete_year_founded(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(year_founded__icontains=request.GET.get('term')).values('year_founded').distinct()[:20]
+        qs = Company.objects.filter(year_founded__icontains=request.GET.get('term')).values('year_founded').distinct()[:15]
         year_founds = []
         for year_founded in qs:
             year_founds.append(year_founded['year_founded'])
@@ -105,7 +105,7 @@ def auto_complete_year_founded(request):
 
 def auto_complete_industry(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(industry__icontains=request.GET.get('term')).values('industry').distinct()[:20]
+        qs = Company.objects.filter(industry__icontains=request.GET.get('term')).values('industry').distinct()[:15]
         industries = []
         for industry in qs:
             industries.append(industry['industry'])
@@ -114,7 +114,7 @@ def auto_complete_industry(request):
 
 def auto_complete_size_range(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(size_range__icontains=request.GET.get('term')).values('size_range').distinct()[:20]
+        qs = Company.objects.filter(size_range__icontains=request.GET.get('term')).values('size_range').distinct()[:15]
         size_ranges = []
         for size_range in qs:
             size_ranges.append(size_range['size_range'])
@@ -123,7 +123,7 @@ def auto_complete_size_range(request):
 
 def auto_complete_locality(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(locality__icontains=request.GET.get('term')).values('locality').distinct()[:20]
+        qs = Company.objects.filter(locality__icontains=request.GET.get('term')).values('locality').distinct()[:15]
         localities = []
         for locality in qs:
             localities.append(locality['locality'])
@@ -132,7 +132,7 @@ def auto_complete_locality(request):
 
 def auto_complete_country(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(country__icontains=request.GET.get('term')).values('country').distinct()[:20]
+        qs = Company.objects.filter(country__icontains=request.GET.get('term')).values('country').distinct()[:15]
         countries = []
         for country in qs:
             countries.append(country['country'])
@@ -141,7 +141,7 @@ def auto_complete_country(request):
 
 def auto_complete_linkedin_url(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(linkedin_url__icontains=request.GET.get('term')).values('linkedin_url').distinct()[:20]
+        qs = Company.objects.filter(linkedin_url__icontains=request.GET.get('term')).values('linkedin_url').distinct()[:15]
         linkedin_urls = []
         for linkedin_url in qs:
             linkedin_urls.append(linkedin_url['linkedin_url'])
@@ -150,7 +150,7 @@ def auto_complete_linkedin_url(request):
 
 def auto_complete_current_employee_estimate(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(current_employee_estimate__icontains=request.GET.get('term'))[:8]
+        qs = Company.objects.filter(current_employee_estimate__icontains=request.GET.get('term'))[:15]
         current_employee_estimates = []
         for company in qs:
             current_employee_estimates.append(company.current_employee_estimate)
@@ -159,7 +159,7 @@ def auto_complete_current_employee_estimate(request):
 
 def auto_complete_total_employee_estimate(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(total_employee_estimate__icontains=request.GET.get('term'))[:8]
+        qs = Company.objects.filter(total_employee_estimate__icontains=request.GET.get('term'))[:15]
         total_employee_estimates = []
         for company in qs:
             total_employee_estimates.append(company.total_employee_estimate)
