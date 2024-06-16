@@ -3,20 +3,19 @@ from django.contrib.auth.decorators import login_required
 from allauth.account.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.views import View
 from django.utils.decorators import method_decorator
 from datetime import timedelta
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from .models import UploadedFile, Company
 import csv
+import requests
 from rest_framework import status
-from .serializers import CompanySerializer
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from .forms import UploadForm, AddUser, CompanyFilterForm
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -74,13 +73,94 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
             Company.objects.bulk_create(companies)
 
 
-def auto_complete(request):
+def auto_complete_name(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(name__icontains=request.GET.get('term'))
+        qs = Company.objects.filter(name__icontains=request.GET.get('term')).values('name').distinct()[:20]
         names = []
+        for name in qs:
+            names.append(name['name'])
+        return JsonResponse(names, safe=False)
+
+
+def auto_complete_domain(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(domain__icontains=request.GET.get('term')).values('domain').distinct()[:20]
+        domains = []
+        for domain in qs:
+            domains.append(domain['domain'])
+        return JsonResponse(domains, safe=False)
+
+
+def auto_complete_year_founded(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(year_founded__icontains=request.GET.get('term')).values('year_founded').distinct()[:20]
+        year_founds = []
+        for year_founded in qs:
+            year_founds.append(year_founded['year_founded'])
+        return JsonResponse(year_founds, safe=False)
+
+
+def auto_complete_industry(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(industry__icontains=request.GET.get('term')).values('industry').distinct()[:20]
+        industries = []
+        for industry in qs:
+            industries.append(industry['industry'])
+        return JsonResponse(industries, safe=False)
+
+
+def auto_complete_size_range(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(size_range__icontains=request.GET.get('term')).values('size_range').distinct()[:20]
+        size_ranges = []
+        for size_range in qs:
+            size_ranges.append(size_range['size_range'])
+        return JsonResponse(size_ranges, safe=False)
+
+
+def auto_complete_locality(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(locality__icontains=request.GET.get('term')).values('locality').distinct()[:20]
+        localities = []
+        for locality in qs:
+            localities.append(locality['locality'])
+        return JsonResponse(localities, safe=False)
+
+
+def auto_complete_country(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(country__icontains=request.GET.get('term')).values('country').distinct()[:20]
+        countries = []
+        for country in qs:
+            countries.append(country['country'])
+        return JsonResponse(countries, safe=False)
+
+
+def auto_complete_linkedin_url(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(linkedin_url__icontains=request.GET.get('term')).values('linkedin_url').distinct()[:20]
+        linkedin_urls = []
+        for linkedin_url in qs:
+            linkedin_urls.append(linkedin_url['linkedin_url'])
+        return JsonResponse(linkedin_urls, safe=False)
+
+
+def auto_complete_current_employee_estimate(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(current_employee_estimate__icontains=request.GET.get('term'))[:8]
+        current_employee_estimates = []
         for company in qs:
-            names.append(company.name)
-        return Response(names, status.HTTP_200_OK)
+            current_employee_estimates.append(company.current_employee_estimate)
+        return JsonResponse(current_employee_estimates, safe=False)
+
+
+def auto_complete_total_employee_estimate(request):
+    if 'term' in request.GET:
+        qs = Company.objects.filter(total_employee_estimate__icontains=request.GET.get('term'))[:8]
+        total_employee_estimates = []
+        for company in qs:
+            total_employee_estimates.append(company.total_employee_estimate)
+        return JsonResponse(total_employee_estimates, safe=False)
 
 
 def query_builder(request):
@@ -89,12 +169,12 @@ def query_builder(request):
         if form.is_valid():
             # Prepare query parameters
             params = {key: value for key, value in form.cleaned_data.items() if value}
-
             # Make the API request
-            response = requests.get('http://localhost/get_count/', params=params)
+            response = requests.get('http://localhost:8000/get_count/', params=params)
             if response.status_code == 200:
                 count = response.json().get('count', 0)
-                return JsonResponse({'count': count})
+                messages.success(request, f'{count} Records found for query')
+                return redirect('query_builder')
             else:
                 return JsonResponse({'error': 'Failed to fetch count from API'}, status=response.status_code)
     else:

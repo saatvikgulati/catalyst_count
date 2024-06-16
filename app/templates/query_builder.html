@@ -3,7 +3,7 @@
 {%block content%}
     <h1>Filter Companies</h1>
 <div class="content-section">
-    <form id="filterForm" onsubmit="fetchCount(event)">
+    <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group" id="tags">
              <legend class="border-bottom-mb-4">Query Builder</legend>
@@ -17,7 +17,34 @@
 <script>
   $( function() {
     $( "#id_name" ).autocomplete({
-      source: "{%url 'auto_complete' %}"
+      source: "{%url 'auto_complete_name' %}"
+    });
+    $( "#id_domain" ).autocomplete({
+      source: "{%url 'auto_complete_domain' %}"
+    });
+    $( "#id_year_founded" ).autocomplete({
+      source: "{%url 'auto_complete_year_founded' %}"
+    });
+     $( "#id_industry" ).autocomplete({
+      source: "{%url 'auto_complete_industry' %}"
+    });
+    $( "#id_size_range" ).autocomplete({
+      source: "{%url 'auto_complete_size_range' %}"
+    });
+    $( "#id_locality" ).autocomplete({
+      source: "{%url 'auto_complete_locality' %}"
+    });
+    $( "#id_country" ).autocomplete({
+      source: "{%url 'auto_complete_country' %}"
+    });
+    $( "#id_linkedin_url" ).autocomplete({
+      source: "{%url 'auto_complete_linkedin_url' %}"
+    });
+    $( "#id_current_employee_estimate" ).autocomplete({
+      source: "{%url 'auto_complete_current_employee_estimate' %}"
+    });
+    $( "#id_total_employee_estimate" ).autocomplete({
+      source: "{%url 'auto_complete_total_employee_estimate' %}"
     });
   } );
   </script>
