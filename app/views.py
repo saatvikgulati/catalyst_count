@@ -176,7 +176,8 @@ def query_builder(request):
                 messages.success(request, f'{count} Records found for query')
                 return redirect('query_builder')
             else:
-                return JsonResponse({'error': 'Failed to fetch count from API'}, status=response.status_code)
+                messages.error(request, 'Error communicating with Api')
+                return redirect('query_builder')
     else:
         form = CompanyFilterForm()
     return render(request, 'query_builder.html', {'form': form})
