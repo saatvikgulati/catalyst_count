@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from .validators import validate_file_extension
 
 # Create your models here.
 
 
 class UploadedFile(models.Model):
     uploaded_user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
-    file = models.FileField(upload_to='uploads/', null=True)
+    file = models.FileField(upload_to='uploads/', null=True, validators=[validate_file_extension])
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

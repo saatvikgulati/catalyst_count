@@ -35,6 +35,9 @@ def upload_file(request):
             bulk_insert_from_csv(file_id=UploadedFile.objects.all().last().id)
             messages.success(request, 'File uploaded successfully')
             return redirect('query_builder')
+        else:
+            messages.error(request, 'File type not supported')
+            return redirect('upload_file')
     else:
         form = UploadForm()
         return render(request, 'upload_file.html', {'form': form, 'redirect_url': reverse('upload_file')})
