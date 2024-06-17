@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from allauth.account.views import LoginView, LogoutView, PasswordResetView
+from allauth.account.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -282,13 +282,8 @@ class Logout(LogoutView):
         return render(request, self.template_name)
 
 
-class PasswordReset(PasswordResetView):
-    model = User
-    template_name = 'password_reset.html'
-
-
 @login_required
-def delete_view(request, user_id):
+def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.delete()
     return redirect('user_list')
