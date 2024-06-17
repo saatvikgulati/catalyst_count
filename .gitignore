@@ -90,7 +90,8 @@ coverage.xml
 .ipynb_checkpoints 
 
 # pyenv 
-.python-version 
+.python-version
+pyenv.cfg
 
 # celery 
 celerybeat-schedule.* 
