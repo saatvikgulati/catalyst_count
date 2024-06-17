@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'bootstrap4',
     'rest_framework',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
