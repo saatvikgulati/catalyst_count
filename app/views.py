@@ -166,6 +166,7 @@ def auto_complete_total_employee_estimate(request):
         return JsonResponse(total_employee_estimates, safe=False)
 
 
+@login_required
 def query_builder(request):
     if request.method == "POST":
         form = CompanyFilterForm(request.POST)
