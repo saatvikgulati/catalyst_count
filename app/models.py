@@ -32,3 +32,17 @@ class Company(models.Model):
 
     def __str__(self):
         return f'{self.name} | {self.country}'
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['name'], name='name_idx'),
+            models.Index(fields=['domain'], name='domain_idx'),
+            models.Index(fields=['year_founded'], name='year_founded_idx'),
+            models.Index(fields=['industry'], name='industry_idx'),
+            models.Index(fields=['size_range'], name='size_range_idx'),
+            models.Index(fields=['locality'], name='locality_idx'),
+            models.Index(fields=['country'], name='country_idx'),
+            models.Index(fields=['linkedin_url'], name='linkedin_url_idx'),
+            models.Index(fields=['current_employee_estimate'], name='current_employee_estimate_idx'),
+            models.Index(fields=['total_employee_estimate'], name='total_employee_estimate_idx'),
+        ]

@@ -76,93 +76,119 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
             Company.objects.bulk_create(companies)
 
 
+def fetch_all():
+    qs_name = Company.objects.filter(name__isnull=False).distinct('name')
+    qs_domain = Company.objects.filter(domain__isnull=False).distinct('domain')
+    qs_year_founded = Company.objects.filter(year_founded__isnull=False).distinct('year_founded')
+    qs_industry = Company.objects.filter(industry__isnull=False).distinct('industry')
+    qs_size_range = Company.objects.filter(size_range__isnull=False).distinct('size_range')
+    qs_locality = Company.objects.filter(locality__isnull=False).distinct('locality')
+    qs_country = Company.objects.filter(country__isnull=False).distinct('country')
+    qs_linkedin_url = Company.objects.filter(linkedin_url__isnull=False).distinct('linkedin_url')
+    qs_current_employee_estimate = Company.objects.filter(current_employee_estimate__isnull=False).distinct('current_employee_estimate')
+    qs_total_employee_estimate = Company.objects.filter(total_employee_estimate__isnull=False).distinct('total_employee_estimate')
+
+    return {
+        'qs_name': qs_name,
+        'qs_domain': qs_domain,
+        'qs_year_founded': qs_year_founded,
+        'qs_industry': qs_industry,
+        'qs_size_range': qs_size_range,
+        'qs_locality': qs_locality,
+        'qs_country': qs_country,
+        'qs_linkedin_url': qs_linkedin_url,
+        'qs_current_employee_estimate': qs_current_employee_estimate,
+        'qs_total_employee_estimate': qs_total_employee_estimate,
+            }
+
+
 def auto_complete_name(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(name__icontains=request.GET.get('term')).values('name').distinct()[:15]
-        names = []
-        for name in qs:
-            names.append(name['name'])
+        term = request.GET.get('term').lower()  # Convert term to lowercase for case-insensitive filtering
+        qs = fetch_all()
+        qs = qs['qs_name'].filter(name__icontains=term)[:10]  # Filter for both contain and starting matches
+        names = [company.name for company in qs]  # Extract names from tuples efficiently
         return JsonResponse(names, safe=False)
 
 
 def auto_complete_domain(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(domain__icontains=request.GET.get('term')).values('domain').distinct()[:15]
-        domains = []
-        for domain in qs:
-            domains.append(domain['domain'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_domain'].filter(domain__icontains=term)[:10]
+        domains = [company.domain for company in qs]
         return JsonResponse(domains, safe=False)
 
 
 def auto_complete_year_founded(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(year_founded__icontains=request.GET.get('term')).values('year_founded').distinct()[:15]
-        year_founds = []
-        for year_founded in qs:
-            year_founds.append(year_founded['year_founded'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_year_founded'].filter(year_founded__icontains=term)[:10]
+        year_founds = [company.year_founded for company in qs]
         return JsonResponse(year_founds, safe=False)
 
 
 def auto_complete_industry(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(industry__icontains=request.GET.get('term')).values('industry').distinct()[:15]
-        industries = []
-        for industry in qs:
-            industries.append(industry['industry'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_industry'].filter(industry__icontains=term)[:10]
+        industries = [company.industry for company in qs]
         return JsonResponse(industries, safe=False)
 
 
 def auto_complete_size_range(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(size_range__icontains=request.GET.get('term')).values('size_range').distinct()[:15]
-        size_ranges = []
-        for size_range in qs:
-            size_ranges.append(size_range['size_range'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_size_range'].filter(size_range__icontains=term)[:10]
+        size_ranges = [company.ssize_range for company in qs]
         return JsonResponse(size_ranges, safe=False)
 
 
 def auto_complete_locality(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(locality__icontains=request.GET.get('term')).values('locality').distinct()[:15]
-        localities = []
-        for locality in qs:
-            localities.append(locality['locality'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_locality'].filter(locality__icontains=term)[:10]
+        localities = [company.locality for company in qs]
         return JsonResponse(localities, safe=False)
 
 
 def auto_complete_country(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(country__icontains=request.GET.get('term')).values('country').distinct()[:15]
-        countries = []
-        for country in qs:
-            countries.append(country['country'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_country'].filter(country__icontains=term)[:10]
+        countries = [company.country for company in qs]
         return JsonResponse(countries, safe=False)
 
 
 def auto_complete_linkedin_url(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(linkedin_url__icontains=request.GET.get('term')).values('linkedin_url').distinct()[:15]
-        linkedin_urls = []
-        for linkedin_url in qs:
-            linkedin_urls.append(linkedin_url['linkedin_url'])
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_linkedin_url'].filter(linkedin_url__icontains=term)[:10]
+        linkedin_urls = [company.linkedin_url for company in qs]
         return JsonResponse(linkedin_urls, safe=False)
 
 
 def auto_complete_current_employee_estimate(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(current_employee_estimate__icontains=request.GET.get('term'))[:15]
-        current_employee_estimates = []
-        for company in qs:
-            current_employee_estimates.append(company.current_employee_estimate)
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_current_employee_estimate'].filter(current_employee_estimate__icontains=term)[:10]
+        current_employee_estimates = [company.current_employee_estimate for company in qs]
         return JsonResponse(current_employee_estimates, safe=False)
 
 
 def auto_complete_total_employee_estimate(request):
     if 'term' in request.GET:
-        qs = Company.objects.filter(total_employee_estimate__icontains=request.GET.get('term'))[:15]
-        total_employee_estimates = []
-        for company in qs:
-            total_employee_estimates.append(company.total_employee_estimate)
+        term = request.GET.get('term').lower()
+        qs = fetch_all()
+        qs = qs['qs_total_employee_estimate'].filter(total_employee_estimate__icontains=term)[:10]
+        total_employee_estimates = [company.total_employee_estimate for company in qs]
         return JsonResponse(total_employee_estimates, safe=False)
 
 
