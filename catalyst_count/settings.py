@@ -61,6 +61,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.MD5PasswordHasher",
+]
+
 ROOT_URLCONF = 'catalyst_count.urls'
 
 TEMPLATES = [

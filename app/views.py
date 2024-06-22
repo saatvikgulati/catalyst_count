@@ -216,7 +216,7 @@ def query_builder(request):
 class CompanyApiView(APIView):
 
     def get(self, request, *args, **kwargs):
-        qs = Company.objects.all()
+        qs = Company.objects.all().distinct()
         keyword_industry = self.request.query_params.get('industry', None)
 
         if keyword_industry:
