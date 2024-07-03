@@ -296,21 +296,14 @@ def add_user(request):
 @method_decorator(csrf_exempt, name='dispatch')
 class Logout(LogoutView):
     template_name = 'logout_confirmation.html'  # Template for logout confirmation
-    next_page = reverse_lazy('account_login')  # Redirect to the login page after logout
-
-    def post(self, request, *args, **kwargs):
-        # Perform logout
-        from django.contrib.auth import logout
-        logout(request)
-        return redirect(self.next_page)
-
-    def get(self, request, *args, **kwargs):
-        # Render the logout confirmation page
-        return render(request, self.template_name)
 
 
 @login_required
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    user.delete()
+    if user:
+        messages.success(request, f'User {user} deleted successfully')
+        user.delete()
+    else:
+        messages.error(request, 'User not found')
     return redirect('user_list')
