@@ -25,12 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables from .env
 env_path = BASE_DIR / '.env'
 load_dotenv(env_path)
-# SECRET_KEY = 'django-insecure-l96j-r#*9^8u1o^j#j3tkb%mepp%#9n3b4%1^^9!b&@1zj)eir'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() in ['true', '1', 't', 'y', 'yes']
-
+DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -97,15 +95,15 @@ WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': os.getenv('DB_ENGINE'),
         'OPTIONS': {
             'options': '-c search_path=catalyst_count'
         },
-        'NAME': 'catalyst_count',
-        'USER': 'catalyst_user',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
