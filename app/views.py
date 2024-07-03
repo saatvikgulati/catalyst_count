@@ -1,21 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from allauth.account.views import LoginView, LogoutView
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from datetime import timedelta
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
-from .models import UploadedFile, Company
-import csv
-import requests
+from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
-from django.http import JsonResponse
 from rest_framework.views import APIView
+from allauth.account.views import LoginView, LogoutView
+import csv
+import requests
+from datetime import timedelta
+from .models import UploadedFile, Company
 from .forms import UploadForm, AddUser, CompanyFilterForm
-from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
