@@ -1,11 +1,15 @@
 from django.urls import path
 from .views import *
 from django.shortcuts import redirect
+from allauth.account.views import PasswordResetView, PasswordResetFromKeyView, PasswordResetDoneView
 
 urlpatterns = [
     path('user_list/', user_list, name='user_list'),
     path('accounts/signup/', add_user, name='account_signup'),
     path('accounts/logout/', Logout.as_view(), name='account_logout'),
+    path('accounts/password/reset/', PasswordResetView.as_view(template_name='password_reset.html'), name='account_password_reset'),
+    path('accounts/password/reset/key/<uidb36>-<key>/', PasswordResetFromKeyView.as_view(template_name='password_reset_from_key.html')),
+    path('accounts/password/reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='account_reset_password_done'),
     path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
     path('accounts/login/', Login.as_view(), name='account_login'),
     path('upload_file/', upload_file, name='upload_file'),

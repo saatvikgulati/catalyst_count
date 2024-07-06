@@ -99,7 +99,7 @@ def fetch_all():
         'qs_linkedin_url': qs_linkedin_url,
         'qs_current_employee_estimate': qs_current_employee_estimate,
         'qs_total_employee_estimate': qs_total_employee_estimate,
-            }
+    }
 
 
 def auto_complete_name(request):
