@@ -7,6 +7,8 @@ from allauth.account.views import (
     PasswordResetDoneView,
     PasswordResetFromKeyDoneView,
     ConfirmEmailView,
+    EmailView,
+    EmailVerificationSentView,
     PasswordChangeView
 )
 
@@ -19,7 +21,8 @@ urlpatterns = [
     path('accounts/password/reset/key/done/', PasswordResetFromKeyDoneView.as_view(template_name='password_reset_from_key_done.html')),
     path('accounts/password/reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_from_key_done.html'), name='account_reset_password_done'),
     path('accounts/password/change/', PasswordChangeView.as_view(template_name='change_password.html')),
-    path('accounts/confirm-email/', ConfirmEmailView.as_view(template_name='confirm_email.html')),
+    path('accounts/confirm-email/', EmailVerificationSentView.as_view(template_name='confirm_email.html')),
+    path('accounts/confirm-email/<key>/', ConfirmEmailView.as_view(template_name='confirm_email_key.html')),
     path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
     path('accounts/login/', Login.as_view(), name='account_login'),
     path('upload_file/', upload_file, name='upload_file'),

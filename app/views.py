@@ -285,7 +285,7 @@ def add_user(request):
         if request.method == 'POST':
             form = AddUser(request.POST)
             if form.is_valid():
-                form.save()
+                form.save(request)
                 messages.success(request, 'User addd successfully')
                 return redirect('user_list')
         else:
