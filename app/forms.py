@@ -22,16 +22,16 @@ class AddUser(SignupForm):
 
 
 class CompanyFilterForm(forms.Form):
-    name = forms.CharField(max_length=255, required=False)
-    domain = forms.CharField(max_length=255, required=False)
-    year_founded = forms.CharField(max_length=255, required=False)
-    industry = forms.CharField(max_length=255, required=False)
-    size_range = forms.CharField(max_length=255, required=False)
-    locality = forms.CharField(max_length=255, required=False)
-    country = forms.CharField(max_length=255,required=False)
-    linkedin_url = forms.CharField(max_length=255, required=False)
-    current_employee_estimate = forms.CharField(max_length=255, required=False)
-    total_employee_estimate = forms.CharField(max_length=255, required=False)
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Name'}), required=False)
+    domain = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Domain'}), required=False)
+    year_founded = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Year founded'}), required=False)
+    industry = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Industry'}), required=False)
+    size_range = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Size range'}), required=False)
+    locality = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Locality'}), required=False)
+    country = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Country'}), required=False)
+    linkedin_url = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Linkedin url'}), required=False)
+    current_employee_estimate = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Current employee estimate'}), required=False)
+    total_employee_estimate = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Total employee estimate'}), required=False)
 
     class Meta:
         model = Company
