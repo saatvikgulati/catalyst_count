@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from allauth.account.forms import SignupForm
+from django.core.validators import EmailValidator
 from .models import UploadedFile, Company
 from django.contrib.auth.models import User
 
@@ -12,14 +13,14 @@ class UploadForm(forms.ModelForm):
         fields = ['file']
 
 
-class AddUser(UserCreationForm):
-    email = forms.EmailField()
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
+class AddUser(SignupForm):
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'First name'}))
+    last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
+    email = forms.EmailField(validators=[EmailValidator], widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = '__all__'
 
 
 class CompanyFilterForm(forms.Form):
