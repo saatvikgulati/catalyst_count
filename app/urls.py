@@ -1,7 +1,14 @@
 from django.urls import path
 from .views import *
 from django.shortcuts import redirect
-from allauth.account.views import PasswordResetView, PasswordResetFromKeyView, PasswordResetDoneView
+from allauth.account.views import (
+    PasswordResetView,
+    PasswordResetFromKeyView,
+    PasswordResetDoneView,
+    PasswordResetFromKeyDoneView,
+    ConfirmEmailView,
+    PasswordChangeView
+)
 
 urlpatterns = [
     path('user_list/', user_list, name='user_list'),
@@ -9,7 +16,10 @@ urlpatterns = [
     path('accounts/logout/', Logout.as_view(), name='account_logout'),
     path('accounts/password/reset/', PasswordResetView.as_view(template_name='password_reset.html'), name='account_password_reset'),
     path('accounts/password/reset/key/<uidb36>-<key>/', PasswordResetFromKeyView.as_view(template_name='password_reset_from_key.html')),
-    path('accounts/password/reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='account_reset_password_done'),
+    path('accounts/password/reset/key/done/', PasswordResetFromKeyDoneView.as_view(template_name='password_reset_from_key_done.html')),
+    path('accounts/password/reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_from_key_done.html'), name='account_reset_password_done'),
+    path('accounts/password/change/', PasswordChangeView.as_view(template_name='change_password.html')),
+    path('accounts/confirm-email/', ConfirmEmailView.as_view(template_name='confirm_email.html')),
     path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
     path('accounts/login/', Login.as_view(), name='account_login'),
     path('upload_file/', upload_file, name='upload_file'),
