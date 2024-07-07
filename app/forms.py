@@ -1,6 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm
-from django.core.validators import EmailValidator
+from django.core.validators import validate_email
 from .models import UploadedFile, Company
 from django.contrib.auth.models import User
 
@@ -16,7 +16,7 @@ class UploadForm(forms.ModelForm):
 class AddUser(SignupForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
-    email = forms.EmailField(validators=[EmailValidator], widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    email = forms.EmailField(validators=[validate_email], widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
 
     class Meta:
         model = User
