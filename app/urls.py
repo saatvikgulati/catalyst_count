@@ -7,7 +7,6 @@ from allauth.account.views import (
     PasswordResetDoneView,
     PasswordResetFromKeyDoneView,
     ConfirmEmailView,
-    EmailView,
     EmailVerificationSentView,
     PasswordChangeView
 )
