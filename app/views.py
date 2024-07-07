@@ -4,8 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
@@ -14,8 +15,8 @@ from allauth.account.views import LoginView, LogoutView
 import csv
 import requests
 from datetime import timedelta
-from .models import UploadedFile, Company
-from .forms import UploadForm, AddUser, CompanyFilterForm
+from app.models import UploadedFile, Company
+from app.forms import UploadForm, AddUser, CompanyFilterForm
 
 
 # Create your views here.
@@ -200,7 +201,7 @@ def query_builder(request):
             # Prepare query parameters
             params = {key: value for key, value in form.cleaned_data.items() if value}
             # Make the API request
-            response = requests.get('http://localhost:8000/get_count/', params=params)
+            response = requests.get(settings.API_URL, params=params)
             if response.status_code == 200:
                 count = response.json().get('count', 0)
                 messages.success(request, f'{count} Records found for query')
@@ -307,3 +308,7 @@ def delete_user(request, user_id):
     else:
         messages.error(request, 'User not found')
     return redirect('user_list')
+
+
+def redirect_to_login(request):
+    return redirect('account_login')

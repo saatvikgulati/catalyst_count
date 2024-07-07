@@ -1,6 +1,6 @@
 from django import forms
 from allauth.account.forms import SignupForm
-from .models import UploadedFile, Company
+from app.models import UploadedFile, Company
 from django.contrib.auth.models import User
 
 
