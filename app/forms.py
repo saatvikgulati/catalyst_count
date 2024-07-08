@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class UploadForm(forms.ModelForm):
-    file = forms.FileField()
+    file = forms.FileField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}))
 
     class Meta:
         model = UploadedFile
@@ -22,8 +22,8 @@ class AddUser(SignupForm):
 
 
 class CompanyFilterForm(forms.Form):
-    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Name'}), required=False)
-    domain = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Domain'}), required=False)
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Name', 'class': 'col'}), required=False)
+    domain = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Domain', 'class': 'col'}), required=False)
     year_founded = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Year founded'}), required=False)
     industry = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Industry'}), required=False)
     size_range = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Size range'}), required=False)
