@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
-
+import uuid
 # Create your models here.
 
 
@@ -19,6 +19,10 @@ class UploadedFile(models.Model):
     def delete(self, *args, **kwargs):
         self.file.delete()
         super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.file.name = f'{uuid.uuid4()}{self.file.name[self.file.name.rfind("."):]}'
+        super().save(*args, **kwargs)
 
 
 class Company(models.Model):
