@@ -10,6 +10,9 @@ class UploadedFile(models.Model):
     file = models.FileField(upload_to='uploads/', null=True, validators=[FileExtensionValidator(['csv'])])
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-uploaded_at']
+
     def __str__(self):
         return f'{self.file}'
 
