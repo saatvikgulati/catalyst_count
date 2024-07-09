@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
+from django.contrib.auth import models as user_models
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.urls import reverse
@@ -10,48 +10,48 @@ from django.conf import settings
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from allauth.account.views import LoginView, LogoutView
+from rest_framework import views as rest_framework_views
+from allauth.account import views as allauth_views
 import csv
 import requests
 from datetime import timedelta
-from app.models import UploadedFile, Company
-from app.forms import UploadForm, AddUser, CompanyFilterForm
+from app import models as app_models
+from app import forms as app_forms
 
 
 # Create your views here.
 @login_required
 def user_list(request):
-    active_users = User.objects.filter(last_login__gte=timezone.now() - timedelta(days=30))
+    active_users = user_models.User.objects.filter(last_login__gte=timezone.now() - timedelta(days=30))
     return render(request, 'user_list.html', {'active_users': active_users})
 
 
 @login_required
 def upload_file(request):
     if request.method == 'POST':
-        form = UploadForm(request.POST, request.FILES)
+        form = app_forms.UploadForm(request.POST, request.FILES)
         form.instance.uploaded_user = request.user
         if form.is_valid():
             form.save()
-            bulk_insert_from_csv(file_id=UploadedFile.objects.all().last().id)
+            bulk_insert_from_csv(file_id=app_models.UploadedFile.objects.all().last().id)
             messages.success(request, 'File uploaded successfully')
             return redirect('query_builder')
         else:
             messages.error(request, 'File type not supported')
             return redirect('upload_file')
     else:
-        form = UploadForm()
+        form = app_forms.UploadForm()
         return render(request, 'upload_file.html', {'form': form, 'redirect_url': reverse('upload_file')})
 
 
 def bulk_insert_from_csv(file_id, batch_size=50000):
-    upload_file = UploadedFile.objects.get(id=file_id)
+    upload_file = app_models.UploadedFile.objects.get(id=file_id)
     with upload_file.file.open('r') as csvfile:
         reader = csv.DictReader(csvfile)
         companies = []
         for row in reader:
             # Create a Company object for each row
-            company = Company(
+            company = app_models.Company(
                 # Assuming your CSV columns match your model fields
                 name=row['name'],
                 domain=row['domain'],
@@ -69,25 +69,25 @@ def bulk_insert_from_csv(file_id, batch_size=50000):
 
             # When the batch size is reached, perform the bulk_create
             if len(companies) >= batch_size:
-                Company.objects.bulk_create(companies)
+                app_models.Company.objects.bulk_create(companies)
                 companies = []  # Clear the list for the next batch
 
         # Insert any remaining objects
         if companies:
-            Company.objects.bulk_create(companies)
+            app_models.Company.objects.bulk_create(companies)
 
 
 def fetch_all():
-    qs_name = Company.objects.filter(name__isnull=False).distinct('name')
-    qs_domain = Company.objects.filter(domain__isnull=False).distinct('domain')
-    qs_year_founded = Company.objects.filter(year_founded__isnull=False).distinct('year_founded')
-    qs_industry = Company.objects.filter(industry__isnull=False).distinct('industry')
-    qs_size_range = Company.objects.filter(size_range__isnull=False).distinct('size_range')
-    qs_locality = Company.objects.filter(locality__isnull=False).distinct('locality')
-    qs_country = Company.objects.filter(country__isnull=False).distinct('country')
-    qs_linkedin_url = Company.objects.filter(linkedin_url__isnull=False).distinct('linkedin_url')
-    qs_current_employee_estimate = Company.objects.filter(current_employee_estimate__isnull=False).distinct('current_employee_estimate')
-    qs_total_employee_estimate = Company.objects.filter(total_employee_estimate__isnull=False).distinct('total_employee_estimate')
+    qs_name = app_models.Company.objects.filter(name__isnull=False).distinct('name')
+    qs_domain = app_models.Company.objects.filter(domain__isnull=False).distinct('domain')
+    qs_year_founded = app_models.Company.objects.filter(year_founded__isnull=False).distinct('year_founded')
+    qs_industry = app_models.Company.objects.filter(industry__isnull=False).distinct('industry')
+    qs_size_range = app_models.Company.objects.filter(size_range__isnull=False).distinct('size_range')
+    qs_locality = app_models.Company.objects.filter(locality__isnull=False).distinct('locality')
+    qs_country = app_models.Company.objects.filter(country__isnull=False).distinct('country')
+    qs_linkedin_url = app_models.Company.objects.filter(linkedin_url__isnull=False).distinct('linkedin_url')
+    qs_current_employee_estimate = app_models.Company.objects.filter(current_employee_estimate__isnull=False).distinct('current_employee_estimate')
+    qs_total_employee_estimate = app_models.Company.objects.filter(total_employee_estimate__isnull=False).distinct('total_employee_estimate')
 
     return {
         'qs_name': qs_name,
@@ -196,7 +196,7 @@ def auto_complete_total_employee_estimate(request):
 @login_required
 def query_builder(request):
     if request.method == "POST":
-        form = CompanyFilterForm(request.POST)
+        form = app_forms.CompanyFilterForm(request.POST)
         if form.is_valid():
             # Prepare query parameters
             params = {key: value for key, value in form.cleaned_data.items() if value}
@@ -210,14 +210,14 @@ def query_builder(request):
                 messages.error(request, 'Error communicating with Api')
                 return redirect('query_builder')
     else:
-        form = CompanyFilterForm()
+        form = app_forms.CompanyFilterForm()
     return render(request, 'query_builder.html', {'form': form})
 
 
-class CompanyApiView(APIView):
+class CompanyApiView(rest_framework_views.APIView):
 
     def get(self, request, *args, **kwargs):
-        qs = Company.objects.all().distinct()
+        qs = app_models.Company.objects.all().distinct()
         keyword_industry = self.request.query_params.get('industry', None)
 
         if keyword_industry:
@@ -273,42 +273,38 @@ class CompanyApiView(APIView):
         return Response({'count': count}, status.HTTP_200_OK)
 
 
-class Login(LoginView):
-    model = User
+class Login(allauth_views.LoginView):
+    model = user_models.User
     template_name = 'login.html'
     success_url = '/user_list/'
 
 
 @login_required
 def add_user(request):
-    user = User()
+    user = user_models.User()
     if user.is_authenticated:
         if request.method == 'POST':
-            form = AddUser(request.POST)
+            form = app_forms.AddUser(request.POST)
             if form.is_valid():
                 form.save(request)
                 messages.success(request, 'User addd successfully')
                 return redirect('user_list')
         else:
-            form = AddUser()
+            form = app_forms.AddUser()
         return render(request, 'signup.html', {'form': form})
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class Logout(LogoutView):
+class Logout(allauth_views.LogoutView):
     template_name = 'logout_confirmation.html'  # Template for logout confirmation
 
 
 @login_required
 def delete_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(user_models.User, id=user_id)
     if user:
         messages.success(request, f'User {user} deleted successfully')
         user.delete()
     else:
         messages.error(request, 'User not found')
     return redirect('user_list')
-
-
-def redirect_to_login(request):
-    return redirect('account_login')
