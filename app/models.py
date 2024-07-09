@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
+from django.utils import timezone
 import uuid
 # Create your models here.
 
@@ -8,7 +9,7 @@ import uuid
 class UploadedFile(models.Model):
     uploaded_user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
     file = models.FileField(upload_to='uploads/', null=True, validators=[FileExtensionValidator(['csv'])])
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['-uploaded_at']
