@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import models as user_models
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
@@ -292,11 +290,6 @@ def add_user(request):
         else:
             form = app_forms.AddUser()
         return render(request, 'signup.html', {'form': form})
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class Logout(allauth_views.LogoutView):
-    template_name = 'logout_confirmation.html'  # Template for logout confirmation
 
 
 @login_required

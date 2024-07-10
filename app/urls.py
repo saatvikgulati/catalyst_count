@@ -6,7 +6,7 @@ from allauth.account import views as allauth_views
 urlpatterns = [
     path('user_list/', app_views.user_list, name='user_list'),
     path('accounts/signup/', app_views.add_user, name='account_signup'),
-    path('accounts/logout/', app_views.Logout.as_view(), name='account_logout'),
+    path('accounts/logout/', allauth_views.LogoutView.as_view(template_name='logout_confirmation.html')),
     path('accounts/password/reset/', allauth_views.PasswordResetView.as_view(template_name='password_reset.html')),
     re_path(r'^accounts/password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$', allauth_views.PasswordResetFromKeyView.as_view(template_name='password_reset_from_key.html')),
     path('accounts/password/reset/key/done/', allauth_views.PasswordResetFromKeyDoneView.as_view(template_name='password_reset_from_key_done.html')),
