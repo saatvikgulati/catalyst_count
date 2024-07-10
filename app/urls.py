@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from app import views as app_views
 from django.shortcuts import redirect
 from allauth.account import views as allauth_views
@@ -7,13 +7,13 @@ urlpatterns = [
     path('user_list/', app_views.user_list, name='user_list'),
     path('accounts/signup/', app_views.add_user, name='account_signup'),
     path('accounts/logout/', app_views.Logout.as_view(), name='account_logout'),
-    path('accounts/password/reset/', allauth_views.PasswordResetView.as_view(template_name='password_reset.html'), name='account_password_reset'),
-    path('accounts/password/reset/key/<uidb36>-<key>/', allauth_views.PasswordResetFromKeyView.as_view(template_name='password_reset_from_key.html')),
+    path('accounts/password/reset/', allauth_views.PasswordResetView.as_view(template_name='password_reset.html')),
+    re_path(r'^accounts/password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$', allauth_views.PasswordResetFromKeyView.as_view(template_name='password_reset_from_key.html')),
     path('accounts/password/reset/key/done/', allauth_views.PasswordResetFromKeyDoneView.as_view(template_name='password_reset_from_key_done.html')),
-    path('accounts/password/reset/done/', allauth_views.PasswordResetDoneView.as_view(template_name='password_reset_from_key_done.html'), name='account_reset_password_done'),
+    path('accounts/password/reset/done/', allauth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html')),
     path('accounts/password/change/', allauth_views.PasswordChangeView.as_view(template_name='change_password.html')),
     path('accounts/confirm-email/', allauth_views.EmailVerificationSentView.as_view(template_name='confirm_email.html')),
-    path('accounts/confirm-email/<key>/', allauth_views.ConfirmEmailView.as_view(template_name='confirm_email_key.html')),
+    re_path(r'^accounts/confirm-email/(?P<key>[-:\w]+)/$', allauth_views.ConfirmEmailView.as_view(template_name='confirm_email_key.html')),
     path('delete_user/<int:user_id>/', app_views.delete_user, name='delete_user'),
     path('accounts/login/', app_views.Login.as_view(), name='account_login'),
     path('upload_file/', app_views.upload_file, name='upload_file'),
