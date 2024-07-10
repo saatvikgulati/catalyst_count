@@ -97,7 +97,7 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE'),
         'OPTIONS': {
-            'options': '-c search_path=catalyst_count'
+            'options': f"-c search_path={os.getenv('DB_NAME')}"
         },
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
@@ -164,7 +164,7 @@ ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = bool(os.getenv('ACCOUNT_LOGOUT_ON_PASSWORD_C
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = bool(os.getenv('EMAIL_PORT'))
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
