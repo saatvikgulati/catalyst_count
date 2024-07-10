@@ -287,7 +287,7 @@ def add_user(request):
             form = app_forms.AddUser(request.POST)
             if form.is_valid():
                 form.save(request)
-                messages.success(request, 'User addd successfully')
+                messages.success(request, f'{request.user.username} addd successfully')
                 return redirect('user_list')
         else:
             form = app_forms.AddUser()

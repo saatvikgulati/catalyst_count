@@ -17,8 +17,8 @@
       <td scope="row">{{ user.username }}</td>
       <td>{{ user.email }}</td>
       <!-- Display other user fields -->
-      <td>{%if user.is_active%}Active{%endif%}</td>  <!-- Display "True" or "False" for active status -->
-      {%if user.is_authenticated and not user.is_staff%}
+      <td>Active</td>  <!-- Display "True" or "False" for active status -->
+      {%if not user.is_staff%}
         <td>  <a href="{% url 'delete_user' user.id %}">  <button class="btn btn-danger btn-sm float-right">Delete</button>
         </a>
         </td> {%endif%}
