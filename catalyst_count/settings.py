@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -162,6 +163,12 @@ ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = bool(os.getenv('ACCOUNT_SIGNUP_EMAIL_ENTER_TW
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = float(os.getenv('ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS'))
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = bool(os.getenv('ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE'))
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = bool(os.getenv('ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS'))
+PASSWORD_MIN_LENGTH = int(os.getenv('PASSWORD_MIN_LENGTH'))
+SESSION_SAVE_EVERY_REQUEST = bool(os.getenv('SESSION_SAVE_EVERY_REQUEST'))
+SESSION_EXPIRE_AT_BROWSER_CLOSE = bool(os.getenv('SESSION_EXPIRE_AT_BROWSER_CLOSE'))
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = bool(os.getenv('SESSION_EXPIRE_AFTER_LAST_ACTIVITY'))
+SESSION_TIMEOUT_REDIRECT = os.getenv('SESSION_TIMEOUT_REDIRECT')
+SESSION_COOKIE_SECURE = bool(os.getenv('SESSION_COOKIE_SECURE'))
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
 EMAIL_HOST = os.getenv('EMAIL_HOST')
