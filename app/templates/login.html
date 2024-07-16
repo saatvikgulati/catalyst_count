@@ -8,11 +8,11 @@
         <fieldset class="form-group">
                 <legend class="border-bottom-mb-4">Log in</legend>
                 {{form | crispy}}
-                <a href="{%url 'account_request_login_code'%}">Login By code</a>
                 </fieldset>
             <div class="form-group">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Log in</button>
             </div>
+         <a href="{%url 'account_request_login_code'%}">Login by code</a>
     </form>
 </div>
 {% endblock content %}
