@@ -13,9 +13,11 @@ urlpatterns = [
     path('accounts/password/reset/done/', allauth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html')),
     path('accounts/password/change/', allauth_views.PasswordChangeView.as_view(template_name='change_password.html')),
     path('accounts/confirm-email/', allauth_views.EmailVerificationSentView.as_view(template_name='confirm_email.html')),
+    path('accounts/login/code/', allauth_views.RequestLoginCodeView.as_view(template_name='login_by_code.html')),
+    path('accounts/login/code/confirm/', allauth_views.ConfirmLoginCodeView.as_view(template_name='login_by_code_confirm.html')),
     re_path(r'^accounts/confirm-email/(?P<key>[-:\w]+)/$', allauth_views.ConfirmEmailView.as_view(template_name='confirm_email_key.html')),
     path('delete_user/<int:user_id>/', app_views.delete_user, name='delete_user'),
-    path('accounts/login/', app_views.Login.as_view(), name='account_login'),
+    path('accounts/login/', app_views.Login.as_view()),
     path('upload_file/', app_views.upload_file, name='upload_file'),
     path('query_builder/', app_views.query_builder, name='query_builder'),
 
